@@ -11,6 +11,8 @@ const teamSchema = new Schema({
   created: { type: Date, default: Date.now },
   totalTeamSize: Number,
   teamNFTHash: String,
+  iconPath: String,
+  url: String,
 });
 const Team = mongoose.model("team", teamSchema);
 
