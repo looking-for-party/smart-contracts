@@ -49,7 +49,8 @@ router.post("/", async (req, res) => {
     const user = await User.findOne({ userId: adminUserId });
     if (!user) return res.status(400).send("Invalid adminUserId");
     const base64Data = icon.replace(/^data:image\/png;base64,/, "");
-    const fileName = `${__dirname}/../output/${Date.now}.png`;
+    const date = Date.now()
+    const fileName = `${__dirname}/../uploads/${date}.png`;
     fs.writeFileSync(fileName, base64Data, "base64", function (err) {
       console.log(err);
     });
@@ -72,7 +73,7 @@ router.post("/", async (req, res) => {
     await newTeam.save();
     return res
       .status(200)
-      .send({ teamId, message: "Team created", teamNFTHash });
+      .send({ teamId, message: "Team created", teamNFTHash, icon : date });
   } catch (e) {
     console.log("Error : ", e);
     res.status(500).send(e?.message || e);
