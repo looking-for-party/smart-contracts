@@ -8,6 +8,7 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   try {
+console.log("Request : ",req.body)
     const { ethereumAddress, firstName, lastName } = req.body;
 
     if (!ethereumAddress)
@@ -56,6 +57,10 @@ router.patch("/", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
+router.get("/all", async (req, res) => {
+  const users = await User.find({});
+  return res.status(200).send(users);
+});
 
 router.get("/all", async (req, res) => {
   const users = await User.find({});
@@ -99,5 +104,8 @@ router.get("/:userId", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> d60be2343be98f8453dad273047e455f086dfec5
 module.exports = router;
