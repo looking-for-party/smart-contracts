@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./Equipment.sol";
 
 // @title Looking For Party Profile Contract
 // @notice simple metadata is stored onchain, image stored on ipfs
