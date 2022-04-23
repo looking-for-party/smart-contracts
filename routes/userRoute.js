@@ -34,6 +34,8 @@ console.log("Request : ",req.body)
         userId,
         message: "User created",
         fileHash: file[0].hash,
+        firstName,
+        lastName,
       });
     });
   } catch (e) {
