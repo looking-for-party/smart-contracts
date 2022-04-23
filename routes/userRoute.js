@@ -33,6 +33,8 @@ router.post("/", async (req, res) => {
         userId,
         message: "User created",
         fileHash: file[0].hash,
+        firstName,
+        lastName,
       });
     });
   } catch (e) {
