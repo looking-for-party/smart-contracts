@@ -8,6 +8,7 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   try {
+console.log("Request : ",req.body)
     const { ethereumAddress, firstName, lastName } = req.body;
 
     if (!ethereumAddress)
