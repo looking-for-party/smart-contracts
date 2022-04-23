@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
 contract Equipment is IERC1155, Ownable, ERC1155Supply {
-    bytes4 constant private INTERFACE_SIGNATURE_URI = 0x0e89341c;
 
     event joinedParty(address user, uint256 partyId);
     event leftParty(address user, uint256 partyId);
@@ -78,6 +77,26 @@ contract Equipment is IERC1155, Ownable, ERC1155Supply {
         for (uint256 i = 0; i < eventAttendance[_id].length; ++i) {
 
             address to = eventAttendance[_id][i];
+
+            // check if the address is attending
+            if (events[_id][to])
+                // Grant the items to the caller
+                balances[_id][to] = 1 + balances[_id][to];
+
+            // Emit the Transfer/Mint event.
+            // the 0x0 source address implies a mint
+            // It will also provide the circulating supply info.
+            emit TransferSingle(msg.sender, address(this), to, _id, 1);
+        }
+    }
+
+    // @notice This function should only be called once the event is finished
+    // @dev Allow users to have only one or multiple?
+    function mintToAddresses(uint256 _id, address[] calldata _attendees) external creatorOnly(_id) {
+
+        for (uint256 i = 0; i < _attendees.length; ++i) {
+
+            address to = _attendees[i];
 
             // check if the address is attending
             if (events[_id][to])
