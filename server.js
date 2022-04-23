@@ -8,16 +8,20 @@ const path = require("path");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
+console.log(process.env.MONGO_DEV_URL);
 
-mongoose.connect(process.env.MONGO_DEV_URL, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
+const connectMongo = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_DEV_URL);
+    console.info(
+      "Connected to MongoDB..." + process.env.MONGO_DEV_URL.split("@")[1]
+    );
+  } catch (error) {
+    console.error("Error connecting to MongoDB = ", error.message);
+  }
+};
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
+connectMongo();
 
 class Server {
   constructor() {
@@ -38,7 +42,7 @@ class Server {
     );
     // this.app.use("/uploads", express.static(__dirname + "/uploads"));
     this.app.use("/api/user", userRoute);
-    this.app.use("/api/admin", teamRoute);
+    this.app.use("/api/team", teamRoute);
 
     this.app.use(express.static("client/build"));
 
