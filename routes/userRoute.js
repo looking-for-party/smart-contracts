@@ -50,7 +50,8 @@ router.patch("/", async (req, res) => {
     if (!userId) return res.status(400).send("Invalid userId");
     if (!profileNFTTokenId)
       return res.status(400).send("Invalid profileNFTTokenId");
-    await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
+    console.log({ profileNFTTokenId });
+	  await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
     return res.status(200).send({ message: "Updated User" });
   } catch (e) {
     console.log("Error : ", e);
@@ -67,7 +68,7 @@ router.get("/all", async (req, res) => {
   return res.status(200).send(users);
 });
 
-router.get("/:ethereumAddress", async (req, res) => {
+router.get("/eth/:ethereumAddress", async (req, res) => {
   try {
     const { ethereumAddress } = req.params;
     if (!ethereumAddress)
@@ -104,8 +105,4 @@ router.get("/:userId", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
-<<<<<<< HEAD
-
-=======
->>>>>>> d60be2343be98f8453dad273047e455f086dfec5
 module.exports = router;
