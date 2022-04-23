@@ -1,30 +1,21 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { ethers } from "hardhat";
 
-async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+const main = async function () {
+	// We get the contract to deploy
+  const Profile = await ethers.getContractFactory("Profile");
+  const profile = await Profile.deploy();
 
-  // We get the contract to deploy
-  const Greeter = await ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  await profile.deployed();
+  console.log("Profile deployed to:", profile.address);
 
-  await greeter.deployed();
+	// We get the contract to deploy
+  const Equipment = await ethers.getContractFactory("Equipment");
+  const equipment = await Equipment.deploy("");
 
-  console.log("Greeter deployed to:", greeter.address);
-}
+  await equipment.deployed();
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+  console.log("Equipment deployed to:", equipment.address);
+};
+
+main();
