@@ -43,11 +43,11 @@ router.post("/", async (req, res) => {
 
 router.patch("/", async (req, res) => {
   try {
-    const { userId, profileNFTContractAddress } = req.body;
+    const { userId, profileNFTTokenId } = req.body;
     if (!userId) return res.status(400).send("Invalid userId");
-    if (!profileNFTContractAddress)
-      return res.status(400).send("Invalid profileNFTContractAddress");
-    await User.updateOne({ userId }, { $set: { profileNFTContractAddress } });
+    if (!profileNFTTokenId)
+      return res.status(400).send("Invalid profileNFTTokenId");
+    await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
     return res.status(200).send({ message: "Updated User" });
   } catch (e) {
     console.log("Error : ", e);

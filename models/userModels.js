@@ -6,7 +6,7 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   ethereumAddress: String,
-  profileNFTContractAddress: String,
+  profileNFTTokenId: String,
   created: { type: Date, default: Date.now },
 });
 const User = mongoose.model("user", userSchema);
