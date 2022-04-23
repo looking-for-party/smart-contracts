@@ -1,3 +1,4 @@
+/* eslint-disable node/no-path-concat */
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userModels");
@@ -6,6 +7,23 @@ const { v4: uuidv4 } = require("uuid");
 const ipfsAPI = require("ipfs-api");
 const fs = require("fs");
 const path = require("path");
+
+// const multer = require("multer");
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/");
+//   },
+//   filename: (req, file, cb) => {
+//     let parts = file.originalname.split(".");
+//     const ext = parts.pop();
+//     const name = parts.join(".");
+//     parts = name.split(" ").join(".");
+//     cb(null, +Date.now() + "." + ext);
+//   },
+// });
+
+// const upload = multer({ storage: storage });
 
 const addFileToIPFS = (fileBuffer) => {
   return new Promise((resolve, reject) => {
@@ -21,7 +39,8 @@ const addFileToIPFS = (fileBuffer) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { name, description, totalNumberOfPeople, adminUserId } = req.body;
+    const { name, description, totalNumberOfPeople, adminUserId, url, icon } =
+      req.body;
     if (!name) return res.status(400).send("Invalid name");
     if (!description) return res.status(400).send("Invalid description");
     if (!totalNumberOfPeople)
@@ -29,6 +48,11 @@ router.post("/", async (req, res) => {
     if (!adminUserId) return res.status(400).send("Invalid adminUserId");
     const user = await User.findOne({ userId: adminUserId });
     if (!user) return res.status(400).send("Invalid adminUserId");
+    const base64Data = icon.replace(/^data:image\/png;base64,/, "");
+    const fileName = `${__dirname}/../output/${Date.now}.png`;
+    fs.writeFileSync(fileName, base64Data, "base64", function (err) {
+      console.log(err);
+    });
     const teamId = uuidv4();
 
     const userNFTFile = fs.readFileSync(path.join(__dirname, "test.txt"));
@@ -41,6 +65,8 @@ router.post("/", async (req, res) => {
       adminUserId,
       participants: [],
       teamNFTHash,
+      iconPath: fileName,
+      url,
     };
     const newTeam = new Team(teamDetails);
     await newTeam.save();
@@ -113,5 +139,9 @@ router.get("/addresses/:teamId", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
+
+// router.post("/update-nft-assignment", (req, res) => {
+//   const {} = req.body;
+// });
 
 module.exports = router;

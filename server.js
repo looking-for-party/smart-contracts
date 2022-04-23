@@ -43,6 +43,7 @@ class Server {
     // this.app.use("/uploads", express.static(__dirname + "/uploads"));
     this.app.use("/api/user", userRoute);
     this.app.use("/api/team", teamRoute);
+    this.app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
     this.app.use(express.static("client/build"));
 

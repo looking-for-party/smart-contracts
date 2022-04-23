@@ -78,4 +78,9 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+router.get("/all", async (req, res) => {
+  const users = await User.find({});
+  return res.status(200).send(users);
+});
+
 module.exports = router;
