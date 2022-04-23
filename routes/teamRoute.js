@@ -72,7 +72,7 @@ router.post("/", async (req, res) => {
     await newTeam.save();
     return res
       .status(200)
-      .send({ teamId, message: "Team created", teamNFTHash });
+      .send({ teamId, message: "Team created", teamNFTHash, icon });
   } catch (e) {
     console.log("Error : ", e);
     res.status(500).send(e?.message || e);

@@ -57,6 +57,29 @@ router.patch("/", async (req, res) => {
   }
 });
 
+router.get("/all", async (req, res) => {
+  const users = await User.find({});
+  return res.status(200).send(users);
+});
+
+router.get("/:ethereumAddress", async (req, res) => {
+  try {
+    const { ethereumAddress } = req.params;
+    if (!ethereumAddress)
+      return res.status(400).send("Invalid ethereumAddress");
+    const user = await User.findOne({ ethereumAddress });
+    if (!user) return res.status(400).send("Invalid userId");
+    return res.status(200).send({
+      userId: user.userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ethereumAddress: user.ethereumAddress,
+      created: user.created,
+    });
+  } catch (e) {
+    console.log("Error : ", e);
+  }
+});
 router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -75,11 +98,6 @@ router.get("/:userId", async (req, res) => {
     console.log("Error : ", e);
     return res.status(500).send(e?.message || e);
   }
-});
-
-router.get("/all", async (req, res) => {
-  const users = await User.find({});
-  return res.status(200).send(users);
 });
 
 module.exports = router;
