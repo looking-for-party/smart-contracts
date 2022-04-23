@@ -8,7 +8,6 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   try {
-console.log("Request : ",req.body)
     const { ethereumAddress, firstName, lastName } = req.body;
 
     if (!ethereumAddress)
@@ -50,7 +49,11 @@ router.patch("/", async (req, res) => {
     if (!userId) return res.status(400).send("Invalid userId");
     if (!profileNFTTokenId)
       return res.status(400).send("Invalid profileNFTTokenId");
-    await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
+    console.log({ profileNFTTokenId });
+    await User.updateOne(
+      { userId },
+      { $set: { profileNFTTokenId: +profileNFTTokenId } }
+    );
     return res.status(200).send({ message: "Updated User" });
   } catch (e) {
     console.log("Error : ", e);
@@ -104,8 +107,4 @@ router.get("/:userId", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
-<<<<<<< HEAD
-
-=======
->>>>>>> d60be2343be98f8453dad273047e455f086dfec5
 module.exports = router;

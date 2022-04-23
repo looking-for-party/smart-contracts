@@ -141,8 +141,8 @@ router.get("/addresses/:teamId", async (req, res) => {
   }
 });
 
-// router.post("/update-nft-assignment", (req, res) => {
-//   const {} = req.body;
-// });
+router.post("/update-nft-assignment", (req, res) => {
+  const {} = req.body;
+});
 
 module.exports = router;
