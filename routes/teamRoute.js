@@ -44,7 +44,9 @@ router.post("/", async (req, res) => {
     };
     const newTeam = new Team(teamDetails);
     await newTeam.save();
-    return res.status(200).send({ teamId, message: "Team created" });
+    return res
+      .status(200)
+      .send({ teamId, message: "Team created", teamNFTHash });
   } catch (e) {
     console.log("Error : ", e);
     res.status(500).send(e?.message || e);
@@ -87,13 +89,15 @@ router.get("/:teamId", async (req, res) => {
   }
 });
 
-router.get("/contract-addresses/:teamId", async (req, res) => {
+router.get("/addresses/:teamId", async (req, res) => {
   try {
     const { teamId } = req.params;
     if (!teamId) res.status(400).send("Invalid teamId");
-    const team = Team.findOne({ teamId });
+    const team = await Team.findOne({ teamId });
     if (!team) res.status(400).send("Invalid teamId");
+    console.log({ team });
     const usersIds = team.participants;
+    console.log({ usersIds });
     const contractIds = [];
 
     for (let userCount = 0; userCount < usersIds.length; userCount++) {
