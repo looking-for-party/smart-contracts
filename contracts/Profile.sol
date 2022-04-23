@@ -26,9 +26,9 @@ contract Profile is ERC721, ERC721Enumerable {
     // Mapping to hold profile metadata for each NFT
     mapping(uint256 => Details) public profileDetails;
 
-    event profileCreated();
+    event profileCreated(address owner, uint256 id);
 
-    // Makes sure that the caller is the nft owner
+    // @notice Makes sure that the caller is the nft owner
     modifier isOwner() {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
         require(super.ownerOf(id) == msg.sender, "caller is not the owner of the profile");
@@ -39,32 +39,38 @@ contract Profile is ERC721, ERC721Enumerable {
     }
 
     // @notice Function to mint new profiles
+    // @params _details Initial details to mint nft with
     function mintProfile(Details memory _details) public {
-        uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
         require(mintedProfile[msg.sender] == false, "Owner has already minted a profile");
-        mintedProfile[msg.sender] = true;
+        uint256 id = numUsers;
         _mint(msg.sender, numUsers);
+        mintedProfile[msg.sender] = true;
         profileDetails[id] = _details;
+        emit profileCreated(msg.sender, id);
+        id += 1;
     }
 
     // @notice Getter for a user's profile details
-    function getProfileDetails() external view returns(Details memory){
-        uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
-        return profileDetails[id];
+    // @param _id Id of the profile to query
+    function getProfileDetails(uint256 _id) external view returns(Details memory){
+        return profileDetails[_id];
     }
 
+    // @notice Chage the user's name
     // @params _name new Name
     function setName(string memory _name) public isOwner() {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
         profileDetails[id].name = _name;
     }
 
+    // @notice Change the user's description
     // @params description New description
     function setDescription(string memory _description) public isOwner() {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
         profileDetails[id].description = _description;
     }
 
+    // @notice Change a token's Uri (image hosting)
     // @params uri New uri
     function setUri(string memory _uri) public isOwner() {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
