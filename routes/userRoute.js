@@ -8,7 +8,6 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   try {
-console.log("Request : ",req.body)
     const { ethereumAddress, firstName, lastName } = req.body;
 
     if (!ethereumAddress)
@@ -51,7 +50,10 @@ router.patch("/", async (req, res) => {
     if (!profileNFTTokenId)
       return res.status(400).send("Invalid profileNFTTokenId");
     console.log({ profileNFTTokenId });
-	  await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
+    await User.updateOne(
+      { userId },
+      { $set: { profileNFTTokenId: +profileNFTTokenId } }
+    );
     return res.status(200).send({ message: "Updated User" });
   } catch (e) {
     console.log("Error : ", e);
