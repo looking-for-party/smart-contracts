@@ -57,7 +57,7 @@ router.post("/", async (req, res) => {
     });
     const teamId = uuidv4();
 
-    const userNFTFile = fs.readFileSync(path.join(__dirname, "hat.jpg"));
+    const userNFTFile = fs.readFileSync(path.join(__dirname, "download.jpg"));
     const fileBuffer = Buffer.from(userNFTFile);
     const teamNFTHash = await addFileToIPFS(fileBuffer);
     const teamDetails = {
