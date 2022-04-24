@@ -40,11 +40,7 @@ router.post("/", async (req, res) => {
             firstName,
             lastName,
           })
-          .catch((e) => {
-            console.log("Error : ", e);
-            res.status(500).send(e?.message);
-          });
-      });
+                });
     });
   } catch (e) {
     console.log("Error : ", e);
