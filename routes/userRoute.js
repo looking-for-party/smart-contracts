@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userModels");
+const Team = require("../models/teamModel");
 const ipfsAPI = require("ipfs-api");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
@@ -17,8 +18,6 @@ router.post("/", async (req, res) => {
     if (firstName) userDetails.firstName = firstName;
     if (lastName) userDetails.lastName = lastName;
 
-    const newUser = new User(userDetails);
-    await newUser.save();
     const ipfs = ipfsAPI("ipfs.infura.io", "5001", { protocol: "https" });
     const userNFTFile = fs.readFileSync(path.join(__dirname, "profile.jpg"));
     const fileBuffer = Buffer.from(userNFTFile);
@@ -26,15 +25,25 @@ router.post("/", async (req, res) => {
       if (err) {
         res.status(500).send(err?.message || err);
       }
+      userDetails.NFTHash = file[0].hash;
+      const newUser = new User(userDetails);
 
-      // Todo connect to the ourOwn local host if necessary
-      console.log(file);
-      res.status(200).send({
-        userId,
-        message: "User created",
-        fileHash: file[0].hash,
-        firstName,
-        lastName,
+      newUser.save().then((data) => {
+        // Todo connect to the ourOwn local host if necessary
+        console.log(file);
+        res
+          .status(200)
+          .send({
+            userId,
+            message: "User created",
+            fileHash: file[0].hash,
+            firstName,
+            lastName,
+          })
+          .catch((e) => {
+            console.log("Error : ", e);
+            res.status(500).send(e?.message);
+          });
       });
     });
   } catch (e) {
@@ -86,6 +95,25 @@ router.get("/eth/:ethereumAddress", async (req, res) => {
     });
   } catch (e) {
     console.log("Error : ", e);
+  }
+});
+
+router.get("/all-nfts/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) res.status(400).send("Invalid userId");
+    const user = await User.findOne({ userId });
+    if (!user) res.status(400).send("Invalid userId");
+    const teams = await Team.find({ participants: userId }, { teamNFTHash: 1 });
+    const nfts = { profileHash: user.NFTHash };
+    const badgesHash = [];
+    for (let i = 0; i < teams.length; i++)
+      badgesHash.push(teams[i].teamNFTHash);
+    nfts.badgesHash = badgesHash;
+    return res.status(200).send(nfts);
+  } catch (e) {
+    console.log("Error  : ", e);
+    res.status(500).send(e?.message || e);
   }
 });
 router.get("/:userId", async (req, res) => {
