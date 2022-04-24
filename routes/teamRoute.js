@@ -95,7 +95,7 @@ router.patch("/", async (req, res) => {
     res.status(500).send(e?.message || e);
   }
 });
-router.post("/leave", async (req, res) => {
+router.patch("/leave", async (req, res) => {
   try {
     const { userId, teamId } = req.body;
     const user = await User.findOne({ userId });
