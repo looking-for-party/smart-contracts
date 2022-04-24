@@ -48,6 +48,7 @@ router.post("/", async (req, res) => {
     if (!adminUserId) return res.status(400).send("Invalid adminUserId");
     const user = await User.findOne({ userId: adminUserId });
     if (!user) return res.status(400).send("Invalid adminUserId");
+    if(!icon) return res.status(400).send("Invalid icon");
     const base64Data = icon.replace(/^data:image\/png;base64,/, "");
     const date = Date.now();
     const fileName = `${__dirname}/../uploads/${date}.png`;
