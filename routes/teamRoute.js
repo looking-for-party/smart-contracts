@@ -96,6 +96,21 @@ router.patch("/", async (req, res) => {
     res.status(500).send(e?.message || e);
   }
 });
+router.post("/leave", async (req, res) => {
+  try {
+    const { userId, teamId } = req.body;
+    const user = await User.findOne({ userId });
+    const team = await Team.findOne({ teamId });
+    if (!user || !team) res.status(400).send("Invalid userId or teamIs");
+    if (+team.totalNumberOfPeople >= team.participants.length)
+      return res.status(400).send("Can not add more participants!");
+    await Team.updateOne({ teamId }, { $pull: { participants: userId } });
+    return res.status(200).send({ message: "Team updated!" });
+  } catch (e) {
+    console.log("Error : ", e);
+    res.status(500).send(e?.message || e);
+  }
+});
 
 router.get("/all", async (req, res) => {
   try {

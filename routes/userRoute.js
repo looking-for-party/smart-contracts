@@ -65,6 +65,7 @@ router.patch("/", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
+
 router.get("/all", async (req, res) => {
   const users = await User.find({});
   return res.status(200).send(users);
