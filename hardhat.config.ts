@@ -5,7 +5,8 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
-import "solidity-coverage";
+import "hardhat-deploy";
+import "hardhat-abi-exporter";
 
 dotenv.config();
 
@@ -30,14 +31,39 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    mumbai: {
+      url: process.env.MUMBAI_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    optimism: {
+      url: process.env.ROPSTEN_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+	// config for the hardhat-deploy plugin
+  // allows us to name accounts and use in our deploy scripts
+  namedAccounts: {
+    deployer: 0, // setup to use the first account (index=0)
   },
+  etherscan: {
+    apiKey: process.env.MUMBAI_POLYGONSCAN,
+  },
+  abiExporter: [
+    {
+      path: './abi/pretty',
+      pretty: true,
+    },
+    {
+      path: './abi/ugly',
+      pretty: false,
+    },
+  ]
 };
 
 export default config;

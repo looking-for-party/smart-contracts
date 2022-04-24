@@ -41,19 +41,20 @@ contract Profile is ERC721, ERC721Enumerable {
 
     // @notice Function to mint new profiles
     // @params _details Initial details to mint nft with
-    function mintProfile(Details memory _details) public {
-        require(mintedProfile[msg.sender] == false, "Owner has already minted a profile");
+    function mintProfile(string memory _name, string memory _description, string memory _uri) public {
+        //require(mintedProfile[msg.sender] == false, "Owner has already minted a profile");
+        Details memory details = Details(_name, _description, _uri);
         uint256 id = numUsers;
         _mint(msg.sender, numUsers);
         mintedProfile[msg.sender] = true;
-        profileDetails[id] = _details;
+        profileDetails[id] = details;
         emit profileCreated(msg.sender, id);
-        id += 1;
+        numUsers += 1;
     }
 
     // @notice Getter for a user's profile details
     // @param _id Id of the profile to query
-    function getProfileDetails(uint256 _id) external view returns(Details memory){
+    function getProfileDetails(uint256 _id) external view returns(Details memory) {
         return profileDetails[_id];
     }
 
@@ -63,8 +64,7 @@ contract Profile is ERC721, ERC721Enumerable {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
         profileDetails[id].name = _name;
     }
-
-    // @notice Change the user's description
+    
     // @params description New description
     function setDescription(string memory _description) public isOwner() {
         uint256 id = super.tokenOfOwnerByIndex(msg.sender, 0);
