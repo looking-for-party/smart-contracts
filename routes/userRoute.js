@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
     const newUser = new User(userDetails);
     await newUser.save();
     const ipfs = ipfsAPI("ipfs.infura.io", "5001", { protocol: "https" });
-    const userNFTFile = fs.readFileSync(path.join(__dirname, "test.txt"));
+    const userNFTFile = fs.readFileSync(path.join(__dirname, "profile.jpg"));
     const fileBuffer = Buffer.from(userNFTFile);
     ipfs.files.add(fileBuffer, function (err, file) {
       if (err) {
