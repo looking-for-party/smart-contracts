@@ -86,6 +86,8 @@ router.patch("/", async (req, res) => {
     const user = await User.findOne({ userId });
     const team = await Team.findOne({ teamId });
     if (!user || !team) res.status(400).send("Invalid userId or teamIs");
+    if (+team.totalNumberOfPeople >= team.participants.length)
+      return res.status(400).send("Can not add more participants!");
     await Team.updateOne({ teamId }, { $push: { participants: userId } });
     return res.status(200).send({ message: "Team updated!" });
   } catch (e) {
