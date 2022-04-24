@@ -6,6 +6,7 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   ethereumAddress: String,
+  NFTHash: String,
   profileNFTTokenId: Number,
   created: { type: Date, default: Date.now },
 });

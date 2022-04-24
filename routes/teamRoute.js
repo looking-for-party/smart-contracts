@@ -141,6 +141,10 @@ router.get("/addresses/:teamId", async (req, res) => {
   }
 });
 
+// router.post("/remove-member", (req, res) => {
+
+// });
+
 // router.post("/update-nft-assignment", (req, res) => {
 //   const {} = req.body;
 // });
