@@ -82,8 +82,8 @@ router.post("/", async (req, res) => {
 
 router.patch("/add-contract-address", async (req, res) => {
   try {
-    const { contractAddress, teamId } = req.body;
-    await Team.updateOne({ teamId }, { $set: { contractAddress } }, { new: 1 });
+    const { tokeId, teamId } = req.body;
+    await Team.updateOne({ teamId }, { $set: { tokeId } }, { new: 1 });
     return res.status(200).send({ message: "Updated" });
   } catch (e) {
     console.log("Error : ", e);
