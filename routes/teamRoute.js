@@ -136,7 +136,7 @@ router.get("/all", async (req, res) => {
 
 router.get("/:teamId", async (req, res) => {
   try {
-    const { teamId } = req.body;
+    const { teamId } = req.params;
     if (!teamId) return res.status(400).send("Invalid teamId");
     const team = await Team.findOne({ teamId });
     res.status(200).send(team);
