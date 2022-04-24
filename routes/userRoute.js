@@ -8,7 +8,6 @@ const path = require("path");
 
 router.post("/", async (req, res) => {
   try {
-console.log("Request : ",req.body)
     const { ethereumAddress, firstName, lastName } = req.body;
 
     if (!ethereumAddress)
@@ -21,7 +20,7 @@ console.log("Request : ",req.body)
     const newUser = new User(userDetails);
     await newUser.save();
     const ipfs = ipfsAPI("ipfs.infura.io", "5001", { protocol: "https" });
-    const userNFTFile = fs.readFileSync(path.join(__dirname, "test.txt"));
+    const userNFTFile = fs.readFileSync(path.join(__dirname, "profile.jpg"));
     const fileBuffer = Buffer.from(userNFTFile);
     ipfs.files.add(fileBuffer, function (err, file) {
       if (err) {
@@ -50,14 +49,45 @@ router.patch("/", async (req, res) => {
     if (!userId) return res.status(400).send("Invalid userId");
     if (!profileNFTTokenId)
       return res.status(400).send("Invalid profileNFTTokenId");
-    await User.updateOne({ userId }, { $set: { profileNFTTokenId } });
+    console.log({ profileNFTTokenId });
+    await User.updateOne(
+      { userId },
+      { $set: { profileNFTTokenId: +profileNFTTokenId } }
+    );
     return res.status(200).send({ message: "Updated User" });
   } catch (e) {
     console.log("Error : ", e);
     return res.status(500).send(e?.message || e);
   }
 });
+router.get("/all", async (req, res) => {
+  const users = await User.find({});
+  return res.status(200).send(users);
+});
 
+router.get("/all", async (req, res) => {
+  const users = await User.find({});
+  return res.status(200).send(users);
+});
+
+router.get("/:ethereumAddress", async (req, res) => {
+  try {
+    const { ethereumAddress } = req.params;
+    if (!ethereumAddress)
+      return res.status(400).send("Invalid ethereumAddress");
+    const user = await User.findOne({ ethereumAddress });
+    if (!user) return res.status(400).send("Invalid userId");
+    return res.status(200).send({
+      userId: user.userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ethereumAddress: user.ethereumAddress,
+      created: user.created,
+    });
+  } catch (e) {
+    console.log("Error : ", e);
+  }
+});
 router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -77,10 +107,4 @@ router.get("/:userId", async (req, res) => {
     return res.status(500).send(e?.message || e);
   }
 });
-
-router.get("/all", async (req, res) => {
-  const users = await User.find({});
-  return res.status(200).send(users);
-});
-
 module.exports = router;

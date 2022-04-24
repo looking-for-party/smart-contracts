@@ -49,14 +49,14 @@ router.post("/", async (req, res) => {
     const user = await User.findOne({ userId: adminUserId });
     if (!user) return res.status(400).send("Invalid adminUserId");
     const base64Data = icon.replace(/^data:image\/png;base64,/, "");
-    const date = Date.now()
+    const date = Date.now();
     const fileName = `${__dirname}/../uploads/${date}.png`;
     fs.writeFileSync(fileName, base64Data, "base64", function (err) {
       console.log(err);
     });
     const teamId = uuidv4();
 
-    const userNFTFile = fs.readFileSync(path.join(__dirname, "test.txt"));
+    const userNFTFile = fs.readFileSync(path.join(__dirname, "hat.jpg"));
     const fileBuffer = Buffer.from(userNFTFile);
     const teamNFTHash = await addFileToIPFS(fileBuffer);
     const teamDetails = {
@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
       name,
       description,
       adminUserId,
-      participants: [],
+      participants: [adminUserId],
       teamNFTHash,
       iconPath: fileName,
       url,
@@ -73,7 +73,7 @@ router.post("/", async (req, res) => {
     await newTeam.save();
     return res
       .status(200)
-      .send({ teamId, message: "Team created", teamNFTHash, icon : date });
+      .send({ teamId, message: "Team created", teamNFTHash, icon: date });
   } catch (e) {
     console.log("Error : ", e);
     res.status(500).send(e?.message || e);
