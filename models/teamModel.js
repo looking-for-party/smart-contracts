@@ -13,7 +13,7 @@ const teamSchema = new Schema({
   teamNFTHash: String,
   iconPath: String,
   url: String,
-  tokeId: String
+  tokenId: Number,
 });
 const Team = mongoose.model("team", teamSchema);
 
