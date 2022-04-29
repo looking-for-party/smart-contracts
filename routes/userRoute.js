@@ -98,9 +98,9 @@ router.get("/eth/:ethereumAddress", async (req, res) => {
 router.get("/all-nfts/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    if (!userId) res.status(400).send("Invalid userId");
+    if (!userId) return res.status(400).send("Invalid userId");
     const user = await User.findOne({ userId });
-    if (!user) res.status(400).send("Invalid userId");
+    if (!user) return res.status(400).send("Invalid userId");
     const teams = await Team.find({ participants: userId }, { teamNFTHash: 1 });
     const nfts = { profileHash: user.NFTHash };
     const badgesHash = [];

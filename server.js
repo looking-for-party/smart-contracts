@@ -33,12 +33,14 @@ class Server {
     // require("./controllers/auth");
     // this.app.use(passport.initialize());
     // this.app.use(passport.session());
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.json({limit : "50mb"}));
     this.app.use(cors());
     this.app.use(
       bodyParser.urlencoded({
+	limit: '50mb',
         extended: false,
-      })
+      	parameterLimit:50000
+      }),
     );
     // this.app.use("/uploads", express.static(__dirname + "/uploads"));
     this.app.use("/api/user", userRoute);

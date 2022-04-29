@@ -84,8 +84,8 @@ router.post("/", async (req, res) => {
 router.patch("/add-contract-address", async (req, res) => {
   try {
     const { tokenId, teamId } = req.body;
-    await Team.updateOne({ teamId }, { $set: { tokenId: +tokenId } }, { new: 1 });
-    return res.status(200).send({ message: "Updated" });
+     await Team.updateOne({ teamId }, { $set: { tokenId: +tokenId } });
+	  return res.status(200).send({ message: "Updated" });
   } catch (e) {
     console.log("Error : ", e);
     return res.status(500).send(e?.message || e);
@@ -101,8 +101,7 @@ router.patch("/", async (req, res) => {
     if (+team.totalNumberOfPeople >= team.participants.length)
       return res.status(400).send("Can not add more participants!");
     await Team.updateOne({ teamId }, { $push: { participants: userId } });
-    const _team = Team.findOne({ teamId });
-    return res.status(200).send(_team);
+    return res.status(200).send({});
   } catch (e) {
     console.log("Error : ", e);
     res.status(500).send(e?.message || e);
